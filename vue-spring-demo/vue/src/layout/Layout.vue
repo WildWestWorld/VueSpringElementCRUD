@@ -1,7 +1,15 @@
 <template>
-<div>
-  <router-view></router-view>
-</div>
+  <el-config-provider :locale="locale">
+
+    <div >
+      <Header/>
+      <div class="asideContainer">
+        <Aside/>
+        <router-view style="flex:1"></router-view>
+      </div>
+    </div>
+
+  </el-config-provider>
 </template>
 
 <style >
@@ -21,7 +29,7 @@ import Aside from "@/components/Aside";
 import Home from "@/views/Home";
 
 export default {
-  name:"App",
+  name:"Layout",
   components:{
     [ElConfigProvider.name]:ElConfigProvider,
     Header,

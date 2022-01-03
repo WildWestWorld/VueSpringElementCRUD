@@ -18,6 +18,18 @@ import javax.annotation.Resource;
 public class UserController {
     @Resource
     UserMapper userMapper;
+
+    @PostMapping("/login")
+    public Result<?> login (@RequestBody User user){
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername())   .eq(User::getPassword, user.getPassword()));
+        if (res == null){
+            return Result.error("-1","用户名或密码错误");
+        }
+
+        return Result.success();
+    }
+
+
     @PostMapping
     public Result<?> save (@RequestBody User user){
         if(user.getPassword()==null){

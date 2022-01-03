@@ -139,7 +139,7 @@ export default {
       if(this.form.id){
         request.put("/api/user",this.form).then(res=>{
           console.log(res)
-          if(res.code==0){
+          if(res.code==='0'){
             ElMessage({
               type: 'success',
               message: '更新成功',
@@ -148,7 +148,7 @@ export default {
           }else{
             ElMessage({
               type: 'error',
-              message: 'res.msg',
+              message: res.msg,
               duration:2000,
             })
           }
@@ -158,7 +158,7 @@ export default {
       request.post("/api/user",this.form).then(res=>{
         console.log(res)
 
-        if(res.code==0){
+        if(res.code==='0'){
           ElMessage({
             type: 'success',
             message: '新增成功',
@@ -167,7 +167,7 @@ export default {
         }else{
           ElMessage({
             type: 'error',
-            message: 'res.msg',
+            message: res.msg,
             duration:2000,
           })
         }
@@ -185,7 +185,7 @@ export default {
     handleDelete(id){
       console.log(id);
       request.delete("/api/user/"+id).then(res=>{
-        if(res.code==0){
+        if(res.code==='0'){
           ElMessage({
             type: 'success',
             message: '删除成功',
@@ -194,7 +194,7 @@ export default {
         }else{
           ElMessage({
             type: 'error',
-            message: 'res.msg',
+            message: res.msg,
             duration:2000,
           })
         }
