@@ -29,6 +29,18 @@ public class UserController {
         return Result.success();
     }
 
+    @PostMapping("/register")
+    public Result<?> register (@RequestBody User user){
+        User res = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, user.getUsername()));
+        if (res != null){
+            return Result.error("-1","用户名重复");
+        }
+        if(user.getPassword()==null){
+            user.setPassword("123456");
+        }
+        userMapper.insert(user);
+        return Result.success();
+    }
 
     @PostMapping
     public Result<?> save (@RequestBody User user){
