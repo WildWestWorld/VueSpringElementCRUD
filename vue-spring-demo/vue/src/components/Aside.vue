@@ -1,9 +1,9 @@
 <template>
   <div>
     <el-menu
-        default-active="user"
+        :default-active="routePath"
         class="el-menu-vertical-demo"
-
+        router
     >
       <el-sub-menu index="1">
         <template #title>
@@ -13,10 +13,10 @@
           <span>系统管理</span>
         </template>
 
-        <el-menu-item index="user" :route="{path:'/'}">用户管理</el-menu-item>
+        <el-menu-item index="/user" >用户管理</el-menu-item>
       </el-sub-menu>
 
-      <el-menu-item index="data" :route="{path:'/'}">数据管理</el-menu-item>
+      <el-menu-item index="/book" >书籍管理</el-menu-item>
 
 
     </el-menu>
@@ -33,7 +33,15 @@ import {
 
 export default {
   name: "Aside",
-  components: {Location, Document, IconMenu, Setting}
+  components: {Location, Document, IconMenu, Setting},
+  data(){
+    return{
+      routePath:this.$route.path
+    }
+  },
+  created() {
+    console.log(this.$route.path)
+  },
 }
 </script>
 

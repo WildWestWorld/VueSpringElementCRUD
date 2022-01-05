@@ -5,15 +5,15 @@
     <div>
       <el-dropdown>
     <span class="el-dropdown-link">
-      张三
+      {{form.nikeName}}
       <el-icon class="el-icon--right">
         <arrow-down />
       </el-icon>
     </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>个人信息</el-dropdown-item>
-            <el-dropdown-item @click="$router.push('/login')">退出系统</el-dropdown-item>
+            <el-dropdown-item @click="$router.push('/person')">个人信息</el-dropdown-item>
+            <el-dropdown-item @click="exit">退出系统</el-dropdown-item>
 
           </el-dropdown-menu>
         </template>
@@ -30,7 +30,23 @@ export default {
   name: "Header",
   components:{
     ArrowDown
-  }
+  },
+  data(){
+    return{
+      form:{}
+    }
+  },
+  created() {
+    let str =sessionStorage.getItem("user")||"{}"
+    this.form=JSON.parse(str)
+  },
+  methods:{
+      exit(){
+        sessionStorage.clear();
+        this.$router.push('/login')
+      }
+  },
+
 
 }
 </script>

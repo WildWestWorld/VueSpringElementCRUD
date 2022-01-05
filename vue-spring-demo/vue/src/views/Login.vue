@@ -87,6 +87,8 @@ export default {
                 message: '登录成功',
                 duration: 2000,
               })
+              console.log(res)
+              sessionStorage.setItem("user",JSON.stringify(res.data))
               this.$router.push("/");
 
             } else {

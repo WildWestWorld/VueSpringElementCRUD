@@ -18,7 +18,7 @@ import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 
 import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside";
-import Home from "@/views/Home";
+import Home from "@/views/User";
 
 export default {
   name:"App",
