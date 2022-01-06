@@ -5,7 +5,7 @@
     <div>
       <el-dropdown>
     <span class="el-dropdown-link">
-      {{form.nikeName}}
+      {{user.nikeName}}
       <el-icon class="el-icon--right">
         <arrow-down />
       </el-icon>
@@ -31,6 +31,7 @@ export default {
   components:{
     ArrowDown
   },
+  props:['user'],
   data(){
     return{
       form:{}

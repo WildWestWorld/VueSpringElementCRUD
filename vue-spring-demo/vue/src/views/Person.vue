@@ -71,6 +71,7 @@ export default {
             })
 
             sessionStorage.setItem("user",JSON.stringify(this.form))
+            this.$emit("userInfo");
             this.$router.push('/')
           }else{
             ElMessage({

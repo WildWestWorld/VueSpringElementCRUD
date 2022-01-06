@@ -62,6 +62,17 @@ public class UserController {
         userMapper.deleteById(id);
         return Result.success();
     }
+
+    @GetMapping("/{id}")
+    public Result<?> findById (@PathVariable Integer id){
+        User res = userMapper.selectById(id);
+        if (res == null){
+            return Result.error("-1","该ID不存在");
+        }
+        return Result.success(res);
+    }
+
+
     @GetMapping
     public Result<?> findPage (@RequestParam(defaultValue = "1") Integer pageNum,
                                @RequestParam(defaultValue = "10") Integer pageSize,

@@ -17,6 +17,19 @@
       <el-table-column prop="author" label="作者" />
       <el-table-column prop="createTime" label="创建时间" />
 
+      <el-table-column prop="cover" label="封面">
+      <template #default="scope">
+        <el-image
+            style="width: 100px; height: 100px"
+            :src="scope.row.cover"
+            :preview-src-list="[scope.row.cover]"
+
+        >
+        </el-image>
+      </template>
+        </el-table-column>
+
+
 
 
       <el-table-column  label="操作" >
@@ -60,6 +73,14 @@
 
         <el-form-item label="出版时间">
           <el-date-picker v-model="form.createTime" value-format="YYYY-MM-DD" clearable></el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="封面">
+
+          <el-upload ref="clearUpload" action="http://localhost:9090/files/upload" :on-success="fileUploadSuccess">
+            <el-button type="primary">Click to upload</el-button>
+          </el-upload>
+
         </el-form-item>
 
       </el-form>
@@ -112,6 +133,10 @@ export default {
     this.load()
   },
   methods:{
+    fileUploadSuccess(res){
+      console.log(res)
+      this.form.cover=res.data;
+    },
     load(){
       request.get("/api/book", {
         params: {
@@ -128,6 +153,11 @@ export default {
     add(){
       this.dialogVisible=true;
       this.form={};
+
+      this.$nextTick(()=>{
+        this.$refs['clearUpload'].clearFiles()
+      })
+
     },
     save(){
       //有ID=>更新，没ID=>创建
@@ -169,17 +199,24 @@ export default {
             })
             this.load()
             this.dialogVisible=false;
+
+            this.$nextTick(()=>{
+              this.$refs['clearUpload'].clearFiles()
+            })
           }
 
         })
       }
       this.load()
       this.dialogVisible=false;
-
+      this.$nextTick(()=>{
+        this.$refs['clearUpload'].clearFiles()
+      })
     },
     handleEdit(row){
       this.form=JSON.parse(JSON.stringify(row));
       this.dialogVisible=true;
+
     },
     handleDelete(id){
       console.log(id);

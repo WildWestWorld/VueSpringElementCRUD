@@ -144,7 +144,9 @@ export default {
               type: 'success',
               message: '更新成功',
               duration:2000,
+
             })
+            this.$emit("userInfo");
           }else{
             ElMessage({
               type: 'error',
@@ -175,6 +177,7 @@ export default {
       })
       }
       this.load()
+      this.$emit("userInfo")
       this.dialogVisible=false;
 
     },
