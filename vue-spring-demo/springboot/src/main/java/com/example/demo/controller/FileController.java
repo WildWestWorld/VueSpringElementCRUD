@@ -5,6 +5,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONObject;
 import com.example.demo.common.Result;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +43,41 @@ public class FileController {
         FileUtil.writeBytes(file.getBytes(),filePath);//写入文件的字节流
         return Result.success(ip+":"+port+"/files/"+flag);
     }
+
+    /**
+     * 富文本传递接口
+     * @param file
+     * @return
+     * @throws IOException
+     */
+
+    @PostMapping("/editor/upload")
+    public JSON editorUpload(MultipartFile file) throws IOException {
+
+
+        String ProjectPath = System.getProperty("user.dir");//根项目所在的文件夹的路径，也就是 D:\Project\AforDemo\SpringVueDemo\vue-spring-demo
+        String flag = IdUtil.fastSimpleUUID();//使用uuid标识符
+        String originalFilename = file.getOriginalFilename();//获取传进来的文件名
+
+        String filePath = ProjectPath + "/springboot/src/main/resources/files/"+flag+'_'+originalFilename;//完整的文件路径
+
+        FileUtil.writeBytes(file.getBytes(),filePath);//写入文件的字节流
+
+        String url=ip+":"+port+"/files/"+flag;
+        JSONObject json = new JSONObject();
+        json.set("errno",0);
+
+        JSONArray arr = new JSONArray();
+        json.set("data",arr);
+
+        JSONObject data = new JSONObject();
+        data.set("url",url);
+
+        arr.add(data);
+
+        return json;
+    }
+
 
     @GetMapping("/{flag}")
     public void getFiles(@PathVariable String flag, HttpServletResponse response){

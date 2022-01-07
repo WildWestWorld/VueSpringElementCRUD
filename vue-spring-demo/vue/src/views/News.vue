@@ -12,22 +12,16 @@
     </div>
     <el-table :data="tableData" stripe border style="width: 100%">
       <el-table-column prop="id" label="ID" sortable/>
-      <el-table-column prop="username" label="用户名"  />
-      <el-table-column prop="password" label="密码" />
-      <el-table-column prop="nikeName" label="昵称" />
-      <el-table-column prop="age" label="年龄" />
-      <el-table-column prop="sex" label="性别" />
-      <el-table-column prop="address" label="地址" />
+      <el-table-column prop="title" label="标题"  />
+      <el-table-column prop="author" label="作者"  />
+      <el-table-column prop="time" label="时间" />
 
-      <el-table-column label="角色" >
-        <template #default="scope">
-          <span v-if="scope.row.role ==='1'">管理员</span>
-          <span v-if="scope.row.role ==='2'">普通用户</span>
-        </template>
-      </el-table-column>
+
 
       <el-table-column  label="操作" >
         <template #default="scope">
+          <el-button   @click="contentDetail( scope.row)">详情</el-button>
+
           <el-button   @click="handleEdit( scope.row)">编辑</el-button>
 
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row.id)">
@@ -53,35 +47,22 @@
       </el-pagination>
     </div>
 
-    <el-dialog v-model="dialogVisible" title="提示" width="30%">
-    <el-form  :model="form" label-width="120px">
-      <el-form-item label="用户名">
-        <el-input v-model="form.username" style="width:80%"></el-input>
-      </el-form-item>
-      <el-form-item label="昵称">
-        <el-input v-model="form.nikeName" style="width:80%"></el-input>
-      </el-form-item>
-      <el-form-item label="年龄">
-        <el-input v-model="form.age" style="width:80%"></el-input>
-      </el-form-item>
+    <el-dialog v-model="dialogVisible" title="提示" width="50%">
+      <el-form  :model="form" label-width="120px">
+        <el-form-item label="标题">
+          <el-input v-model="form.title" style="width:60%"></el-input>
+        </el-form-item>
+        <el-form-item label="作者">
+          <el-input v-model="form.author" style="width:60%"></el-input>
+        </el-form-item>
 
-      <el-form-item label="性别">
-        <el-radio v-model="form.sex" label="男">男</el-radio>
-        <el-radio v-model="form.sex" label="女">女</el-radio>
-        <el-radio v-model="form.sex" label="未知">未知</el-radio>
-      </el-form-item>
+<!--        <el-form-item label="内容">-->
+<!--          <el-input v-model="form.content" style="width:80%"></el-input>-->
+<!--        </el-form-item>-->
+        <div id="div1"></div>
 
-      <el-form-item label="角色">
 
-        <el-radio v-model="form.role" label="1">管理员</el-radio>
-        <el-radio v-model="form.role" label="2">普通用户</el-radio>
-
-      </el-form-item>
-
-      <el-form-item label="地址">
-        <el-input type="textarea" v-model="form.address" style="width:80%"></el-input>
-      </el-form-item>
-    </el-form>
+      </el-form>
 
       <template #footer>
       <span class="dialog-footer">
@@ -96,6 +77,14 @@
       </template>
     </el-dialog>
 
+
+
+    <el-dialog v-model="contentVis" title="提示" width="50%">
+      <el-card style="min-height: 100px">
+        <div v-html="detail.content"></div>
+      </el-card>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -106,9 +95,11 @@ import HelloWorld from '@/components/HelloWorld.vue'
 import request from "@/utils/request";
 import { h } from 'vue'
 import { ElMessage } from 'element-plus'
+import E from 'wangeditor'
+let editor;
 
 export default {
-  name: 'Home',
+  name: 'News',
   components: {
     HelloWorld,
     ElMessage
@@ -125,15 +116,26 @@ export default {
       tableData:[
 
       ],
+      detail:{},
+      contentVis:false,
     }
   },
   created() {
     this.load()
-    this.$emit("userInfo")
+
   },
   methods:{
+    contentDetail(row){
+      this.detail =JSON.parse(JSON.stringify(row))
+      this.contentVis=true
+    },
+
+    fileUploadSuccess(res){
+      console.log(res)
+      this.form.cover=res.data;
+    },
     load(){
-      request.get("/api/user", {
+      request.get("/api/news", {
         params: {
           pageNum:this.currentPage,
           pageSize:this.pageSize,
@@ -148,21 +150,45 @@ export default {
     add(){
       this.dialogVisible=true;
       this.form={};
+
+      this.$nextTick(()=>{
+        if ( this.$refs['clearUpload']){
+        this.$refs['clearUpload'].clearFiles()
+        }
+      })
+
+      this.$nextTick(()=>{
+        if(!editor){
+          editor = new E('#div1')
+          editor.config.uploadImgServer="http://localhost:9090/files/editor/upload"
+          editor.config.uploadFileName = 'file'
+          editor.create()
+        }else{
+          editor.txt.clear()
+        }
+
+      })
+
     },
     save(){
+
+
+      this.form.content=editor.txt.html()//获取编辑器里面的值
+
+
+
+
+
       //有ID=>更新，没ID=>创建
       if(this.form.id){
-        request.put("/api/user",this.form).then(res=>{
+        request.put("/api/news",this.form).then(res=>{
           console.log(res)
           if(res.code==='0'){
             ElMessage({
               type: 'success',
               message: '更新成功',
               duration:2000,
-
             })
-            this.load()
-            this.$emit("userInfo");
           }else{
             ElMessage({
               type: 'error',
@@ -173,40 +199,64 @@ export default {
 
         })
       }else{
-      request.post("/api/user",this.form).then(res=>{
+        request.post("/api/news",this.form).then(res=>{
+          console.log(res)
 
+          if(res.code==='0'){
+            ElMessage({
+              type: 'success',
+              message: '新增成功',
+              duration:2000,
+            })
+            this.load()
+            this.dialogVisible=false;
+          }else{
+            ElMessage({
+              type: 'error',
+              message: res.msg,
+              duration:2000,
+            })
+            this.load()
+            this.dialogVisible=false;
 
-        if(res.code==='0'){
-          ElMessage({
-            type: 'success',
-            message: '新增成功',
-            duration:2000,
-          })
-          this.load()
-        }else{
-          ElMessage({
-            type: 'error',
-            message: res.msg,
-            duration:2000,
-          })
-        }
+            this.$nextTick(()=>{
+              if ( this.$refs['clearUpload']){
+                this.$refs['clearUpload'].clearFiles()
+              }
+            })
 
-      })
+          }
+
+        })
       }
       this.load()
-      this.$emit("userInfo")
       this.dialogVisible=false;
+
+      this.$nextTick(()=>{
+        if ( this.$refs['clearUpload']){
+          this.$refs['clearUpload'].clearFiles()
+        }
+      })
 
     },
     handleEdit(row){
-
       this.form=JSON.parse(JSON.stringify(row));
-      console.log(this.form.role);
       this.dialogVisible=true;
+      this.$nextTick(()=>{
+        if(!editor){
+          editor = new E('#div1')
+
+          editor.create()
+        }else{
+          editor.txt.clear()
+        }
+        editor.txt.html(row.content)
+      })
+
     },
     handleDelete(id){
       console.log(id);
-      request.delete("/api/user/"+id).then(res=>{
+      request.delete("/api/news/"+id).then(res=>{
         if(res.code==='0'){
           ElMessage({
             type: 'success',

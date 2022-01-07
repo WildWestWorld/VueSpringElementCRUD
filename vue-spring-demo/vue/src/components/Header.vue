@@ -24,6 +24,7 @@
 
 <script >
 import {ArrowDown} from "@element-plus/icons";
+// import request from "@/utils/request";
 
 
 export default {
@@ -45,6 +46,7 @@ export default {
       exit(){
         sessionStorage.clear();
         this.$router.push('/login')
+
       }
   },
 

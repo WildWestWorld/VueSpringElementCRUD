@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="button">
+    <div class="button" v-if="user.role==='1'">
       <el-button type="primary" @click="add">新增</el-button>
       <el-button type="primary">导入</el-button>
       <el-button type="primary">导出</el-button>
@@ -117,6 +117,7 @@ export default {
   },
   data(){
     return{
+
       form:{},
       searchWord:'',
       currentPage:1,
@@ -131,7 +132,9 @@ export default {
   },
   created() {
     this.load()
+
   },
+  props:['user'],
   methods:{
     fileUploadSuccess(res){
       console.log(res)
@@ -155,7 +158,9 @@ export default {
       this.form={};
 
       this.$nextTick(()=>{
-        this.$refs['clearUpload'].clearFiles()
+        if ( this.$refs['clearUpload']){
+          this.$refs['clearUpload'].clearFiles()
+        }
       })
 
     },
@@ -201,8 +206,11 @@ export default {
             this.dialogVisible=false;
 
             this.$nextTick(()=>{
-              this.$refs['clearUpload'].clearFiles()
+              if ( this.$refs['clearUpload']){
+                this.$refs['clearUpload'].clearFiles()
+              }
             })
+
           }
 
         })
@@ -210,8 +218,11 @@ export default {
       this.load()
       this.dialogVisible=false;
       this.$nextTick(()=>{
-        this.$refs['clearUpload'].clearFiles()
+        if ( this.$refs['clearUpload']){
+          this.$refs['clearUpload'].clearFiles()
+        }
       })
+
     },
     handleEdit(row){
       this.form=JSON.parse(JSON.stringify(row));

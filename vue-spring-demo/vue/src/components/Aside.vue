@@ -5,7 +5,7 @@
         class="el-menu-vertical-demo"
         router
     >
-      <el-sub-menu index="1">
+      <el-sub-menu index="1" v-if="user.role==='1'">
         <template #title>
           <el-icon>
             <location/>
@@ -17,31 +17,43 @@
       </el-sub-menu>
 
       <el-menu-item index="/book" >书籍管理</el-menu-item>
-
+      <el-menu-item index="/news" >新闻管理</el-menu-item>
 
     </el-menu>
   </div>
 </template>
 
 <script>
-import {
-  Location,
-  Document,
-  Menu as IconMenu,
-  Setting,
-} from '@element-plus/icons'
+import {Location, Document, Menu as IconMenu, Setting,} from '@element-plus/icons';
+// import request from "@/utils/request";
+
+
+
 
 export default {
   name: "Aside",
   components: {Location, Document, IconMenu, Setting},
   data(){
     return{
-      routePath:this.$route.path
+      routePath:this.$route.path,
+
     }
   },
+  props:["user"],
   created() {
+    let str =sessionStorage.getItem("user")||"{}"
+    this.form=JSON.parse(str)
+
+    // request.get("/api/user/"+this.form.id).then(res=>{
+    //   if (res.code ==='0'){
+    //     this.form =res.data;
+    //   }
+    // })
+
 
   },
+
+
 }
 </script>
 

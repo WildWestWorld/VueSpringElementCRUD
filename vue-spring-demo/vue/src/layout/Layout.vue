@@ -4,8 +4,8 @@
     <div >
       <Header :user="user"/>
       <div class="asideContainer">
-        <Aside/>
-        <router-view style="flex:1" @userInfo="refreshUser"></router-view>
+        <Aside  :user="user"></Aside>
+        <router-view style="flex:1" @userInfo="refreshUser" :user="user"></router-view>
       </div>
     </div>
 
@@ -21,8 +21,8 @@
 </style>
 
 <script>
-import {ElConfigProvider} from 'element-plus'
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+import {ElConfigProvider} from 'element-plus';
+import zhCn from 'element-plus/lib/locale/lang/zh-cn';
 
 import Header from "@/components/Header.vue";
 import Aside from "@/components/Aside";
@@ -41,12 +41,15 @@ export default {
     return{
       locale:zhCn,
       user:{},
+
     }
   },created() {
-    this.refreshUser()
+    // this.refreshUser()
   },
   methods:{
     refreshUser(){
+
+
       let userJson= sessionStorage.getItem("user");
       if(!userJson){
         return

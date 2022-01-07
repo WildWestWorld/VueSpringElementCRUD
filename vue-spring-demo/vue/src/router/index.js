@@ -24,6 +24,10 @@ const routes = [
             path: '/book',
             name: 'Book',
             component: ()=>import('@/views/Book'),
+        },{
+            path: '/news',
+            name: 'News',
+            component: ()=>import('@/views/News'),
         },
 
         ]
