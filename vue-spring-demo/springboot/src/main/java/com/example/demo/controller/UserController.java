@@ -84,7 +84,7 @@ public class UserController {
             wrapper.like(User::getNikeName,searchWord);
         }
 
-        Page<User> userPage = userMapper.selectPage(new Page<>(pageNum, pageSize), wrapper);
+        Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), searchWord);
         return Result.success(userPage);
     }
 }

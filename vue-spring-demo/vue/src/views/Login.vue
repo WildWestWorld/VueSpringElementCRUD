@@ -28,6 +28,25 @@
             </el-input>
           </el-form-item>
 
+
+          <div style="display:flex;">
+          <el-form-item prop="validCode">
+            <el-input v-model="form.validCode"  @keyup.enter.native="login('formRef')">
+
+              <template #prefix>
+                <el-icon class="el-input__icon">
+                  <Message/>
+                </el-icon>
+              </template>
+
+            </el-input>
+          </el-form-item>
+
+            <ValidCode  @input="createValidCode" ></ValidCode>
+          </div>
+
+
+
           <el-form-item>
             <el-button style="width: 100%;" type="primary" @click="login('formRef')">登录</el-button>
           </el-form-item>
@@ -38,22 +57,26 @@
 </template>
 
 <script>
-import {Search, UserFilled, Lock} from '@element-plus/icons-vue'
+import {Search, UserFilled, Lock,Message} from '@element-plus/icons-vue'
 import request from "@/utils/request";
 import {ElMessage} from "element-plus";
 import {reactive} from 'vue';
+import ValidCode from "@/components/ValidCode";
+
 
 export default {
   name: "Login",
   components: {
+    ValidCode,
     Search,
     UserFilled,
     Lock,
+    Message,
   },
   data() {
     return {
       form: {},
-
+      validCode:'',
       rules: reactive({
         username: [
           {
@@ -69,15 +92,45 @@ export default {
             trigger: 'blur',
           },
         ],
+        validCode: [
+          {
+            required: true,
+            message: '请输入验证码',
+            trigger: 'blur',
+          },
+        ],
+
       }),
 
     }
 
   },
   methods: {
+    createValidCode(data){
+      this.validCode = data
+    },
+
     login(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+
+        if(!this.form.validCode){
+          ElMessage({
+            type: 'error',
+            message: '请输入验证码',
+            duration: 2000,
+          })
+          return
+        }
+
+          if(this.form.validCode.toLowerCase() !== this.validCode.toLowerCase()){
+            ElMessage({
+              type: 'error',
+              message: '验证码错误',
+              duration: 2000,
+            })
+            return
+          }
 
 
           request.post("/api/user/login", this.form).then(res => {

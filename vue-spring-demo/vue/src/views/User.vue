@@ -20,14 +20,15 @@
       <el-table-column prop="address" label="地址" />
 
       <el-table-column label="角色" >
-        <template #default="scope">
+        <template #default="scope" >
           <span v-if="scope.row.role ==='1'">管理员</span>
           <span v-if="scope.row.role ==='2'">普通用户</span>
         </template>
       </el-table-column>
 
-      <el-table-column  label="操作" >
+      <el-table-column  label="操作"  width="300">
         <template #default="scope">
+          <el-button   type="success" plain @click="showBooks( scope.row.bookList)">查看书籍列表</el-button>
           <el-button   @click="handleEdit( scope.row)">编辑</el-button>
 
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row.id)">
@@ -53,6 +54,16 @@
       </el-pagination>
     </div>
 
+    <el-dialog v-model="bookVis" title="用户拥有的图书列表" width="30%">
+      <el-table :data="bookList" stripe border style="width: 100%">
+        <el-table-column prop="id" label="ID" />
+        <el-table-column prop="name" label="书名"  />
+        <el-table-column prop="price" label="价格" />
+      </el-table>
+    </el-dialog>
+
+
+
     <el-dialog v-model="dialogVisible" title="提示" width="30%">
     <el-form  :model="form" label-width="120px">
       <el-form-item label="用户名">
@@ -71,7 +82,7 @@
         <el-radio v-model="form.sex" label="未知">未知</el-radio>
       </el-form-item>
 
-      <el-form-item label="角色">
+      <el-form-item label="角色" >
 
         <el-radio v-model="form.role" label="1">管理员</el-radio>
         <el-radio v-model="form.role" label="2">普通用户</el-radio>
@@ -115,11 +126,13 @@ export default {
   },
   data(){
     return{
+      bookList:[],
       form:{},
       searchWord:'',
       currentPage:1,
       total:0,
       dialogVisible:false,
+      bookVis:false,
       pageNum: 1,
       pageSize:10,
       tableData:[
@@ -132,6 +145,11 @@ export default {
     this.$emit("userInfo")
   },
   methods:{
+    showBooks(bookList){
+      console.log(JSON.parse(JSON.stringify(bookList)));
+      this.bookList=bookList;
+      this.bookVis=true;
+    },
     load(){
       request.get("/api/user", {
         params: {

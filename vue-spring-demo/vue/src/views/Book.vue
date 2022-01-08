@@ -16,8 +16,9 @@
       <el-table-column prop="price" label="价格"  />
       <el-table-column prop="author" label="作者" />
       <el-table-column prop="createTime" label="创建时间" />
-
+      <el-table-column prop="userId" label="拥有者ID" />
       <el-table-column prop="cover" label="封面">
+
       <template #default="scope">
         <el-image
             style="width: 100px; height: 100px"
@@ -73,6 +74,10 @@
 
         <el-form-item label="出版时间">
           <el-date-picker v-model="form.createTime" value-format="YYYY-MM-DD" clearable></el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="拥有者ID">
+          <el-input v-model="form.userId" style="width:80%"></el-input>
         </el-form-item>
 
         <el-form-item label="封面">
