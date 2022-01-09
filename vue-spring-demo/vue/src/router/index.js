@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import Home from '../views/User.vue'
 import Layout from "@/layout/Layout";
 import Login from "@/views/Login";
-import Person from "@/views/Person";
+
 import User from "@/views/User";
 
 const routes = [
@@ -19,7 +19,7 @@ const routes = [
         }, {
             path: '/person',
             name: 'Person',
-            component: Person,
+            component: ()=>import('@/views/Person'),
             },{
             path: '/book',
             name: 'Book',
@@ -28,6 +28,10 @@ const routes = [
             path: '/news',
             name: 'News',
             component: ()=>import('@/views/News'),
+        },{
+            path: '/category',
+            name: 'Category',
+            component: ()=>import('@/views/Category'),
         },
 
         ]

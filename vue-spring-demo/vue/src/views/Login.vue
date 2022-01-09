@@ -4,7 +4,7 @@
       <div>
         <div class="loginText">欢迎登录</div>
         <el-form ref="formRef" :model="form" size="large" :rules="rules">
-          <el-form-item prop="username">
+          <el-form-item prop="username" >
             <el-input v-model="form.username">
 
               <template #prefix>
@@ -17,7 +17,7 @@
           </el-form-item>
 
           <el-form-item prop="password">
-            <el-input v-model="form.password" show-password>
+            <el-input v-model="form.password" show-password >
 
               <template #prefix>
                 <el-icon class="el-input__icon">
@@ -31,7 +31,7 @@
 
           <div style="display:flex;">
           <el-form-item prop="validCode">
-            <el-input v-model="form.validCode"  @keyup.enter.native="login('formRef')">
+            <el-input v-model="form.validCode"  @keyup.enter.native="login('formRef')" >
 
               <template #prefix>
                 <el-icon class="el-input__icon">
@@ -42,7 +42,7 @@
             </el-input>
           </el-form-item>
 
-            <ValidCode  @input="createValidCode" ></ValidCode>
+            <ValidCode  @input="createValidCode" ref="ValidCode"></ValidCode>
           </div>
 
 
@@ -129,6 +129,7 @@ export default {
               message: '验证码错误',
               duration: 2000,
             })
+            this.$refs.ValidCode.refreshCode();
             return
           }
 
@@ -150,6 +151,7 @@ export default {
                 message: res.msg,
                 duration: 2000,
               })
+              this.$refs.ValidCode.refreshCode();
             }
 
           })

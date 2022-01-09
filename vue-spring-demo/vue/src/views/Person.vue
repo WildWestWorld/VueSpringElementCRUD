@@ -59,6 +59,7 @@ export default {
   created(){
     let str =sessionStorage.getItem("user")||"{}"
     this.form =JSON.parse(str)
+    this.test()
   },
   methods:{
     update(){
@@ -81,6 +82,21 @@ export default {
           }
         })
     },
+
+    test(){
+      request.get("/api/user", {
+        params: {
+          pageNum:this.currentPage,
+          pageSize:this.pageSize,
+          searchWord:this.searchWord
+        }
+      }).then(res=>{
+        console.log(res)
+        this.tableData=res.data.records;
+        this.total=res.data.total
+      })
+    },
+
   },
 }
 </script>

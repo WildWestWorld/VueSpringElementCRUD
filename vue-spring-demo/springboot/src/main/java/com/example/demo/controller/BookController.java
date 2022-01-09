@@ -11,6 +11,7 @@ import com.example.demo.mapper.BookMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/book")
@@ -37,6 +38,14 @@ public class BookController {
         bookMapper.deleteById(id);
         return Result.success();
     }
+
+    @PostMapping("/deleteBatch")
+    public Result<?> deleteBatch (@RequestBody List<Integer> ids){
+        bookMapper.deleteBatchIds(ids);
+        return Result.success();
+    }
+
+
     @GetMapping
     public Result<?> findPage (@RequestParam(defaultValue = "1") Integer pageNum,
                                @RequestParam(defaultValue = "10") Integer pageSize,

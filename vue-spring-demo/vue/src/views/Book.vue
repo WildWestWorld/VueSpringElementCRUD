@@ -2,6 +2,14 @@
   <div class="home">
     <div class="button" v-if="user.role==='1'">
       <el-button type="primary" @click="add">新增</el-button>
+
+      <el-popconfirm title="确定要批量删除吗？" @confirm="deleteBatch">
+        <template #reference>
+          <el-button type="danger">批量删除</el-button>
+        </template>
+      </el-popconfirm>
+
+
       <el-button type="primary">导入</el-button>
       <el-button type="primary">导出</el-button>
 
@@ -10,7 +18,10 @@
       <el-input v-model="searchWord" placeholder="请输入搜素内容" style="width: 20%;" clearable></el-input>
       <el-button type="primary" style="margin: 10px 10px;" @click="load()">查询</el-button>
     </div>
-    <el-table :data="tableData" stripe border style="width: 100%">
+
+
+    <el-table :data="tableData" stripe border style="width: 100%"  @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" />
       <el-table-column prop="id" label="ID" sortable/>
       <el-table-column prop="name" label="书名"  />
       <el-table-column prop="price" label="价格"  />
@@ -122,7 +133,7 @@ export default {
   },
   data(){
     return{
-
+      ids:[],
       form:{},
       searchWord:'',
       currentPage:1,
@@ -131,7 +142,6 @@ export default {
       pageNum: 1,
       pageSize:10,
       tableData:[
-
       ],
     }
   },
@@ -141,6 +151,37 @@ export default {
   },
   props:['user'],
   methods:{
+    handleSelectionChange(val){
+      console.log(JSON.parse(JSON.stringify(val)))
+      this.ids = val.map(item=> item.id)
+      // console.log(JSON.parse(JSON.stringify(this.ids)))
+    },
+    deleteBatch(){
+      if (!this.ids.length){
+        ElMessage({
+          type: 'warning',
+          message: '请选择数据',
+          duration:2000,
+        })
+      }
+      request.post("/api/book/deleteBatch",this.ids).then(res=>{
+        if (res.code ==='0'){
+          ElMessage({
+            type: 'success',
+            message: '批量删除成功',
+            duration:2000,
+          })
+          this.load()
+        }else{
+          ElMessage({
+            type: 'success',
+            message: res.msg,
+            duration:2000,
+          })
+        }
+
+      })
+    },
     fileUploadSuccess(res){
       console.log(res)
       this.form.cover=res.data;

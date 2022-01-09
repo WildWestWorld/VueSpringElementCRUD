@@ -44,7 +44,7 @@ export default {
 
     }
   },created() {
-    // this.refreshUser()
+    this.refreshUser()
   },
   methods:{
     refreshUser(){

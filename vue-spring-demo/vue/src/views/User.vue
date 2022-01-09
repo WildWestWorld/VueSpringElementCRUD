@@ -19,14 +19,14 @@
       <el-table-column prop="sex" label="性别" />
       <el-table-column prop="address" label="地址" />
 
-      <el-table-column label="角色" >
+      <el-table-column label="角色" width="300">
         <template #default="scope" >
           <span v-if="scope.row.role ==='1'">管理员</span>
           <span v-if="scope.row.role ==='2'">普通用户</span>
         </template>
       </el-table-column>
 
-      <el-table-column  label="操作"  width="300">
+      <el-table-column  label="操作"  width="400">
         <template #default="scope">
           <el-button   type="success" plain @click="showBooks( scope.row.bookList)">查看书籍列表</el-button>
           <el-button   @click="handleEdit( scope.row)">编辑</el-button>

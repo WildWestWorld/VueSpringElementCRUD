@@ -15,9 +15,9 @@
         <result property="role" column="role"/>
 
         <collection property="bookList" javaType="ArrayList" ofType="com.example.demo.entity.Book">
-            <result column="b_id" property="id" />
-            <result column="b_name" property="name" />
-            <result column="b_price" property="price" />
+            <result property="id" column="b_id"  />
+            <result property="name" column="b_name"  />
+            <result property="price" column="b_price" />
         </collection>
     </resultMap>
 

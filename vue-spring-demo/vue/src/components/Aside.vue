@@ -17,6 +17,9 @@
       </el-sub-menu>
 
       <el-menu-item index="/book" >书籍管理</el-menu-item>
+      <el-menu-item index="/category" >分类管理</el-menu-item>
+
+
       <el-menu-item index="/news" >新闻管理</el-menu-item>
 
     </el-menu>
