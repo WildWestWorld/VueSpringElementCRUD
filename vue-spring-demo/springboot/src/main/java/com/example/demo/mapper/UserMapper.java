@@ -9,4 +9,7 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper extends BaseMapper<User> {
     //一对多查询
     Page<User> findPage(Page<User> page,@Param("nikeName") String nikeName);
+
+
+
 }

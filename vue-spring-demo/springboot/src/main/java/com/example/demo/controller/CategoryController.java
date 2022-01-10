@@ -48,6 +48,7 @@ public class CategoryController  {
     public Result<?> getAll() {
         // 先查询所有的数据
         List<Category> allCategories = CategoryMapper.selectList(null);
+
         return Result.success(loopQuery(null, allCategories));
     }
 

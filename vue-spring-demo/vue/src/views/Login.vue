@@ -143,6 +143,7 @@ export default {
               })
               console.log(res)
               sessionStorage.setItem("user",JSON.stringify(res.data))
+              sessionStorage.setItem("token",JSON.stringify(res.data.token))
               this.$router.push("/");
 
             } else {
@@ -152,6 +153,7 @@ export default {
                 duration: 2000,
               })
               this.$refs.ValidCode.refreshCode();
+              return
             }
 
           })

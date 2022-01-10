@@ -32,6 +32,10 @@ const routes = [
             path: '/category',
             name: 'Category',
             component: ()=>import('@/views/Category'),
+        },{
+            path: '/order',
+            name: 'Order',
+            component: ()=>import('@/views/Order'),
         },
 
         ]

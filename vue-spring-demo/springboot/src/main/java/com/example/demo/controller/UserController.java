@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.Result;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
+
+import com.example.demo.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,6 +28,13 @@ public class UserController {
             return Result.error("-1","用户名或密码错误");
         }
 
+        String token = TokenUtils.getToken(res);
+        res.setToken(token);
+//        User userInfo = TokenUtils.getUser();
+//        System.out.println(userInfo);
+//
+//        System.out.println(token);
+        System.out.println(res);
         return Result.success(res);
     }
 
@@ -69,6 +78,10 @@ public class UserController {
         if (res == null){
             return Result.error("-1","该ID不存在");
         }
+
+        User userInfo = TokenUtils.getUser();
+        System.out.println(userInfo);
+
         return Result.success(res);
     }
 

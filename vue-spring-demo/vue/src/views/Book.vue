@@ -47,7 +47,7 @@
       <el-table-column  label="操作" >
         <template #default="scope">
           <el-button   @click="handleEdit( scope.row)">编辑</el-button>
-
+          <el-button type="primary"  @click="buy(scope.row.id)">购买</el-button>
           <el-popconfirm title="你确定要删除吗?" @confirm="handleDelete(scope.row.id)">
             <template #reference>
               <el-button type="danger" >删除</el-button>
@@ -151,6 +151,12 @@ export default {
   },
   props:['user'],
   methods:{
+    buy(bookId) {
+      request.get("/api/order/buy/" + bookId).then(res => {
+        // 请求成功跳转沙箱支付的页面
+        window.open(res.data)
+      })
+    },
     handleSelectionChange(val){
       console.log(JSON.parse(JSON.stringify(val)))
       this.ids = val.map(item=> item.id)

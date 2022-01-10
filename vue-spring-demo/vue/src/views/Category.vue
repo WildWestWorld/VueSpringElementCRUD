@@ -17,7 +17,6 @@
         stripe
         style="width: 100%"
         row-key="id"
-        default-expand-all
     >
       <!--      <el-table-column-->
       <!--          prop="id"-->
@@ -25,10 +24,8 @@
       <!--          sortable-->
       <!--      >-->
       <!--      </el-table-column>-->
-      <el-table-column
-          prop="name"
-          label="名称">
-      </el-table-column>
+      <el-table-column prop="name" label="名称"></el-table-column>
+
       <el-table-column label="操作">
         <template #default="scope">
           <el-button  @click="handleEdit(scope.row)" v-if="user.role === '1'">编辑</el-button>
@@ -43,12 +40,18 @@
 
     <el-card style="margin: 10px 0; width: 50%">
       <div class="custom-tree-container">
-        <el-tree :data="tableData" :props="defaultProps" show-checkbox
+        <el-tree :data="tableData"
+
+                 :props="defaultProps"
+                 show-checkbox
+
                  @check-change="handleCheckChange"
                  node-key="id"
-                 :default-expanded-keys="[1, 2]"
+                 :default-expanded-keys="[2,3]"
                  :default-checked-keys="checkedList"
+                 :expand-on-click-node="false"
         >
+
           <template #default="{ node, data }">
         <span class="custom-tree-node">
           <span>{{ node.label }}</span>
@@ -171,6 +174,7 @@ export default {
       console.log(this.casdata)
     },
     remove(node, data) {
+      console.log(node)
       request.delete("/api/category/" + data.id).then(res => {
         this.load()
       })
@@ -181,9 +185,10 @@ export default {
       // children.splice(index, 1);
       // this.data = [...this.data]
     },
-    handleCheckChange(data, checked, indeterminate) {
+    handleCheckChange(data, checked) {
       console.log(data.id);
       console.log(data.name);
+      console.log(checked)
     },
     load() {
       this.loading = true
