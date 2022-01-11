@@ -15,7 +15,7 @@ request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
 
     let str = sessionStorage.getItem('token');
-    if (!whiteUrls.includes(config.url)) {  // 校验请求白名单
+    if (!whiteUrls.includes(config.url)) {  // 校验请求白名单   config.url = 你向后端哪个路径请求了
         if (!str) {
             router.push('/login')
         }else {

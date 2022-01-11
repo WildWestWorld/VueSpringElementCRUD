@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -77,14 +78,23 @@ public class TokenUtils {
      */
     public static User getUser() {
         try {
+            //利用springboot获取request ，注意在多线程或者异步时可能会取不到request数据
             HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
+
+            //从request中获取header请求头的内容
             String token = request.getHeader("token");
 //            String token    ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDE3NDE2NDgsInVzZXJOYW1lIjoibGlqaWVrYWkxOTk4IiwidXNlcklkIjoxM30.cSWtmZUNpUBlMJ5xDs8VQX5Ei4R-W34f8t_Y8k1mRNs";
+
+            //根据你填写的SECRET创建jwtVerifier验证器
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(SECRET)).build();
+            //jwtVerifier验证器 验证token或者把token解码
             DecodedJWT verify = jwtVerifier.verify(token);
+            //解码后的token就可以使用getChaim就可以拿到我们存放的claim数据数据
             Integer userId = verify.getClaim("userId").asInt();
+            //调用UserMapper中的selectById 查询对应的User
             User userInfo = staticUserMapper.selectById(userId);
+            //解码后的token使用getExpiresAt()获取到过期时间
             Date expiresTime = verify.getExpiresAt();
 
             System.out.println(userId);

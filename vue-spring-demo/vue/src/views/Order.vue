@@ -75,7 +75,7 @@
         <template #default="scope">
           <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row.id)">
             <template #reference>
-              <el-button size="mini" type="danger">删除</el-button>
+              <el-button  type="danger">删除</el-button>
             </template>
           </el-popconfirm>
         </template>
