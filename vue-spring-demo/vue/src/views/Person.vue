@@ -4,6 +4,19 @@
 
   <el-card class="box-card">
     <el-form  :model="form" label-width="120px">
+
+      <el-form-item style="text-align: center" label-width="0">
+        <el-upload
+            class="avatar-uploader"
+            action="http://localhost:9090/files/upload"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+        >
+          <img v-if="form.avatar" :src="form.avatar" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </el-form-item>
+
       <el-form-item label="用户名">
         <el-input v-model="form.username" style="width:80%" disabled></el-input>
       </el-form-item>
@@ -62,6 +75,14 @@ export default {
     this.test()
   },
   methods:{
+    handleAvatarSuccess(res) {
+      this.form.avatar = res.data
+      ElMessage({
+        type:'success',
+        message:'上传成功',
+      })
+
+    },
     update(){
         request.put("/api/user",this.form).then(res=>{
           console.log(res)

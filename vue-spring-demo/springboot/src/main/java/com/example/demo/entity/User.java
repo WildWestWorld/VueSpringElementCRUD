@@ -21,12 +21,14 @@ public class User {
     private String sex;
     private String address;
     private String role;
+    private String avatar;
 
     @TableField(exist = false)
     private List<Book> bookList;
 
     @TableField(exist = false)
     private String token;
+
 
 
 

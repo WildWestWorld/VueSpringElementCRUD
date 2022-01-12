@@ -25,13 +25,22 @@ public class AliPayController {
     public String pay(AliPay aliPay) {
         AlipayTradePagePayResponse response;
         try {
-            //  发起API调用（以创建当面付收款二维码为例）
+            //  发起API调用（以创建当面付收款二维码为例
+
+            // Payment.Page就是电脑网页支付的封装接口
+
+            //  aliPay.getSubject() = 获取商品名
+            // aliPay.getTraceNo() = 获取订单号
+            // aliPay.getTotalAmount() = 获取商品的金额
+            //"" = 支付结束后返回的页面
+
             response = Factory.Payment.Page()
                     .pay(aliPay.getSubject(), aliPay.getTraceNo(), aliPay.getTotalAmount(), "");
         } catch (Exception e) {
             System.err.println("调用遭遇异常，原因：" + e.getMessage());
             throw new RuntimeException(e.getMessage(), e);
         }
+        //
         return response.getBody();
     }
 

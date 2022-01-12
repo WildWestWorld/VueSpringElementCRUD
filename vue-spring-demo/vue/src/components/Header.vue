@@ -5,6 +5,7 @@
     <div>
       <el-dropdown>
     <span class="el-dropdown-link">
+      <el-avatar :size="30" :src="user.avatar" style="position: relative; top: 10px"></el-avatar>
       {{user.nikeName}}
       <el-icon class="el-icon--right">
         <arrow-down />

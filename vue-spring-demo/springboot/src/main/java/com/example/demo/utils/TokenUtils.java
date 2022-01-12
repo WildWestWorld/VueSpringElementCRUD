@@ -58,7 +58,7 @@ public class TokenUtils {
 
         //withExpiresAt(x) = 设置token过期时间为 x
         //DateUtil.offsetHour(new Date(), 1)  创建一个时间，时间为此刻时间的一个小时后
-        String token = builder.withExpiresAt(DateUtil.offsetHour(new Date(), 1))
+        String token = builder.withExpiresAt(DateUtil.offsetDay(new Date(), 1))
 
                 //JWT的Header（非必要），默认也会有的
                 .withHeader(map)
