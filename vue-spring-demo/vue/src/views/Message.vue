@@ -19,7 +19,7 @@
             <el-button type="text"  @click="del(item.id)" v-if="item.username === user.username">删除</el-button>
           </div>
 
-          <div style="background-color: #eee; padding: 10px" v-if="item.parentMessage">{{ item.username }}：{{ item.parentMessage.content }}</div>
+          <div style="background-color: #eee; padding: 10px" v-if="item.parentMessage">{{ item.parentMessage.username }}：{{ item.parentMessage.content }}</div>
           <div style="color: #888; font-size: 12px">
             <span>{{ item.time  }}</span>
             <el-button type="text" style="margin-left: 20px" @click="reReply(item.id)">回复</el-button>

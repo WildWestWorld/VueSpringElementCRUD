@@ -76,9 +76,9 @@ public class MessageController {
         List<Message> list = messageMapper.selectList(queryWrapper);
         // 循环所有留言数据
         for (Message Message : list) {
-            User one = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, Message.getUsername()));
-            if (StrUtil.isNotBlank(one.getAvatar())) {
-                Message.setAvatar(one.getAvatar());
+            User oneUser = userMapper.selectOne(Wrappers.<User>lambdaQuery().eq(User::getUsername, Message.getUsername()));
+            if (StrUtil.isNotBlank(oneUser.getAvatar())) {
+                Message.setAvatar(oneUser.getAvatar());
             } else {
                 // 默认一个头像
                 Message.setAvatar("https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png");

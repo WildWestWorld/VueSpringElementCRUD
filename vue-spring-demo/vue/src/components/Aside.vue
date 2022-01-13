@@ -24,7 +24,7 @@
 
 
       <el-menu-item index="/news" >新闻管理</el-menu-item>
-
+      <el-menu-item index="/im" >在线聊天室</el-menu-item>
       <el-menu-item index="/message" >留言板</el-menu-item>
     </el-menu>
   </div>
