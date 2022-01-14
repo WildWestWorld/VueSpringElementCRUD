@@ -74,10 +74,15 @@ public class WebSocketServer {
     /**
      * 服务端发送消息给所有客户端
      */
-    //这个message是上面我们自己弄的那个result
+    //这个message是上面我们自己弄的那个  result ={"users":[{"username":"qq380686356"},{"username":"lijiekai1998"}]}
     private void sendAllMessage(String message) {
         try {
+
+            //此时的sessionMap为{lijiekai1998:"asdasdasdasdasdasd"}
+            //sessionMap.values()="asdasdasdasdasdasd"
             for (Session session : sessionMap.values()) {
+
+
               //session.getId 里面的ID就是0,1,2,3,4.....
                 log.info("服务端给客户端[{}]发送消息{}", session.getId(), message);
                 //发送消息

@@ -86,6 +86,18 @@ public class UserController {
     }
 
 
+    /**
+     * 统计数据
+     *
+     * @return
+     */
+    @GetMapping("/count")
+    public Result<?> count() {
+//        User user = getUser(); // 当前登录的用户信息
+        return Result.success(userMapper.countAddress());
+    }
+
+
     @GetMapping
     public Result<?> findPage (@RequestParam(defaultValue = "1") Integer pageNum,
                                @RequestParam(defaultValue = "10") Integer pageSize,

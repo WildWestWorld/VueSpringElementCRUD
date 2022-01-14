@@ -8,6 +8,11 @@ import ElementPlus from 'element-plus'
 
 import '@/assets/css/global.css'
 
+import * as echarts from 'echarts'
 
-createApp(App).use(store).use(router).use(ElementPlus).mount('#app')
+
+const  app =createApp(App).use(store).use(router).use(ElementPlus).use(echarts).mount('#app')
+
+
+app.echarts = echarts
 

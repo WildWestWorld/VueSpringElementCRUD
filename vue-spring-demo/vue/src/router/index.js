@@ -48,6 +48,10 @@ const routes = [
             path: '/im',
             name: 'Im',
             component: ()=>import('@/views/Im'),
+        },{
+            path: '/echart',
+            name: 'Echart',
+            component: ()=>import('@/views/Echart'),
         },
 
         ]

@@ -29,7 +29,7 @@
             <textarea v-model="text" style="height: 160px; width: 100%; padding: 20px; border: none; border-top: 1px solid #ccc;
              border-bottom: 1px solid #ccc; outline: none"></textarea>
             <div style="text-align: right; padding-right: 10px">
-              <el-button type="primary" size="mini" @click="send">发送</el-button>
+              <el-button type="primary"  @click="send">发送</el-button>
             </div>
           </div>
         </div>
@@ -81,11 +81,78 @@ export default {
           // 组装待发送的消息 json
           // {"from": "zhang", "to": "admin", "text": "聊天文本"}
           let message = {from: this.user.username, to: this.chatUser, text: this.text}
-          socket.send(JSON.stringify(message));  // 将组装好的json发送给服务端，由服务端进行转发
+          // 将组装好的json发送给服务端，由服务端进行转发
+          socket.send(JSON.stringify(message));
+
           this.messages.push({user: this.user.username, text: this.text})
           // 构建消息内容，本人消息
           this.createContent(null, this.user.username, this.text)
           this.text = '';
+        }
+      }
+    },
+
+    init() {
+      this.user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {}
+      let username = this.user.username;
+      let _this = this;
+      //判断浏览器是否支持websocket
+      if (typeof (WebSocket) == "undefined") {
+        console.log("您的浏览器不支持WebSocket");
+      } else {
+        console.log("您的浏览器支持WebSocket");
+        let socketUrl = "ws://localhost:9090/imserver/" + username;
+        if (socket != null) {
+          socket.close();
+          socket = null;
+        }
+
+
+
+        // 开启一个websocket服务 需要传入后端的websocket接口
+        socket = new WebSocket(socketUrl);
+        //打开事件
+        //当socket开启时，触发function
+        socket.onopen = function () {
+          console.log("websocket已打开");
+        };
+
+        //  浏览器端收消息，获得从服务端发送过来的文本消息
+        //当socket开始传送消息时，触发function 此时的msg是后端传过来的
+        socket.onmessage = function (msg) {
+          console.log("收到数据====" + msg.data)
+          //后端发过来msg有两次，一次是{"users":[{"username":"lijiekai1998"}]}，另外一次是{"from": "zhang", "text": "hello"}
+         //此处是第一次后端发送的信息：{"users":[{"username":"qq380686356"},{"username":"lijiekai1998"}]}
+          let data = JSON.parse(msg.data)  // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
+
+          //如果数据中有users没有text，那么此时是在获取在线人员的个数和信息
+          if (data.users) {  // 获取在线人员信息
+           this.users = data.users.filter(user => user.username !== username)  // 获取当前连接的所有用户信息，并且排除自身，自己不会出现在自己的聊天列表里
+          }
+        //如果没有user，有text，那么就是在发送消息
+        else {
+            // 如果服务器端发送过来的json数据 不包含 users 这个key，那么发送过来的就是聊天文本json数据
+            //  // {"from": "zhang", "text": "hello"}
+
+            //此时的_this.chatUser是我们点击图标后，赋值的,他的值是user.username  这里的user是我们自己session里面的user
+            //如果数据来自于我们聊天的对象
+            if (data.from === this.chatUser) {
+              _this.messages.push(data)
+              // 构建消息内容 （聊天对象发给我们的） 把text放到前端显示一下
+              _this.createContent(data.from, null, data.text)
+            }
+          }
+        };
+
+        //关闭事件
+        //在socket关闭时触发该函数
+        socket.onclose = function () {
+          console.log("websocket已关闭");
+        };
+        //发生了错误事件
+        //在socket发生错误时触发该函数
+        socket.onerror = function () {
+          console.log("websocket发生了错误");
         }
       }
     },
@@ -118,51 +185,6 @@ export default {
       console.log(html)
       this.content += html;
     },
-    init() {
-      this.user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : {}
-      let username = this.user.username;
-      let _this = this;
-      if (typeof (WebSocket) == "undefined") {
-        console.log("您的浏览器不支持WebSocket");
-      } else {
-        console.log("您的浏览器支持WebSocket");
-        let socketUrl = "ws://localhost:9090/imserver/" + username;
-        if (socket != null) {
-          socket.close();
-          socket = null;
-        }
-        // 开启一个websocket服务
-        socket = new WebSocket(socketUrl);
-        //打开事件
-        socket.onopen = function () {
-          console.log("websocket已打开");
-        };
-        //  浏览器端收消息，获得从服务端发送过来的文本消息
-        socket.onmessage = function (msg) {
-          console.log("收到数据====" + msg.data)
-          let data = JSON.parse(msg.data)  // 对收到的json数据进行解析， 类似这样的： {"users": [{"username": "zhang"},{ "username": "admin"}]}
-          if (data.users) {  // 获取在线人员信息
-            _this.users = data.users.filter(user => user.username !== username)  // 获取当前连接的所有用户信息，并且排除自身，自己不会出现在自己的聊天列表里
-          } else {
-            // 如果服务器端发送过来的json数据 不包含 users 这个key，那么发送过来的就是聊天文本json数据
-            //  // {"from": "zhang", "text": "hello"}
-            if (data.from === _this.chatUser) {
-              _this.messages.push(data)
-              // 构建消息内容
-              _this.createContent(data.from, null, data.text)
-            }
-          }
-        };
-        //关闭事件
-        socket.onclose = function () {
-          console.log("websocket已关闭");
-        };
-        //发生了错误事件
-        socket.onerror = function () {
-          console.log("websocket发生了错误");
-        }
-      }
-    }
 
   }
 }

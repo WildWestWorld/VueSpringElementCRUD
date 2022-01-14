@@ -15,7 +15,7 @@
 
         <el-menu-item index="/user" >用户管理</el-menu-item>
       </el-sub-menu>
-
+      <el-menu-item index="/echart" >Echart</el-menu-item>
       <el-menu-item index="/book" >书籍管理</el-menu-item>
       <el-menu-item index="/map" >百度地图</el-menu-item>
       <el-menu-item index="/order" >订单管理</el-menu-item>
