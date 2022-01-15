@@ -10,45 +10,9 @@ const routes = [
         path: '/',
         name: 'Layout',
         component: Layout,
-        redirect: '/user',
+        redirect: '/echart',
 
         children: [{
-            path: '/user',
-            name: 'User',
-            component: ()=>import('@/views/User'),
-        }, {
-            path: '/person',
-            name: 'Person',
-            component: ()=>import('@/views/Person'),
-            },{
-            path: '/book',
-            name: 'Book',
-            component: ()=>import('@/views/Book'),
-        },{
-            path: '/news',
-            name: 'News',
-            component: ()=>import('@/views/News'),
-        },{
-            path: '/category',
-            name: 'Category',
-            component: ()=>import('@/views/Category'),
-        },{
-            path: '/order',
-            name: 'Order',
-            component: ()=>import('@/views/Order'),
-        },{
-            path: '/map',
-            name: 'Map',
-            component: ()=>import('@/views/Map'),
-        },{
-            path: '/message',
-            name: 'Message',
-            component: ()=>import('@/views/Message'),
-        },{
-            path: '/im',
-            name: 'Im',
-            component: ()=>import('@/views/Im'),
-        },{
             path: '/echart',
             name: 'Echart',
             component: ()=>import('@/views/Echart'),
@@ -74,10 +38,55 @@ const routes = [
     },
 
 ]
-
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes
 })
+
+// 在刷新页面的时候重置当前路由
+activeRouter()
+
+function activeRouter() {
+    const permissions = sessionStorage.getItem("permissions")
+    if (permissions) {
+        const permission = JSON.parse(permissions)
+        let root = {
+            path: '/',
+            name: 'Layout',
+            component: Layout,
+            redirect: "/echart",
+            children: []
+        }
+        permission.forEach(p => {
+            let obj = {
+                path: p.path,
+                name: p.name,
+                component: () => import("@/views/" + p.name)
+            };
+            root.children.push(obj)
+        })
+        if (router) {
+            router.addRoute(root)
+        }
+    }
+}
+
+
+router.beforeEach((to, from, next) => {
+    if (to.path === '/login' || to.path === '/register') {
+        next()
+        return
+    }
+    let permissions = sessionStorage.getItem("permissions") ? JSON.parse(sessionStorage.getItem("permissions")) : {}
+    if (!permissions || !permissions.length) {
+        next('/login')
+    } else if (!permissions.find(p => p.path === to.path)) {
+        next('/login')
+    } else {
+        next()
+    }
+})
+
+
 
 export default router

@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="button" v-if="user.role==='1'">
+    <div class="button" >
       <el-button type="primary" @click="add">新增</el-button>
 
       <el-popconfirm title="确定要批量删除吗？" @confirm="deleteBatch">

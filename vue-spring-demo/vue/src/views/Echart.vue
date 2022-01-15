@@ -70,7 +70,7 @@ export default {
             },
             saveAsImage: {        //右上角的第三个按钮 保存为图片。
               show: true,
-              title:"另存为",
+              title:"下载",
             },
 
 
@@ -96,8 +96,11 @@ export default {
       }
 
       request.get("/api/user/count").then(res => {
+        // console.log(option.series[0]);
         if (res.code === '0') {
           res.data.forEach(item => {
+            //option就是上面的我们定义的配置
+            //option.series[0]=series里面的第一个对象，也就是上面的全部数据
             option.series[0].data.push({name: item.address, value: item.count})
           })
           console.log(res)

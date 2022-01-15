@@ -5,33 +5,52 @@
         class="el-menu-vertical-demo"
         router
     >
-      <el-sub-menu index="1" v-if="user.role==='1'">
+      <el-sub-menu index="1" >
         <template #title>
-          <el-icon>
-            <location/>
+
+          <el-icon class="document">
+            <Document/>
           </el-icon>
+
           <span>系统管理</span>
         </template>
 
-        <el-menu-item index="/user" >用户管理</el-menu-item>
+        <el-menu-item index="/user" >
+
+          <el-icon class="location">
+            <location/>
+          </el-icon>
+
+          用户管理
+        </el-menu-item>
+
       </el-sub-menu>
-      <el-menu-item index="/echart" >Echart</el-menu-item>
-      <el-menu-item index="/book" >书籍管理</el-menu-item>
-      <el-menu-item index="/map" >百度地图</el-menu-item>
-      <el-menu-item index="/order" >订单管理</el-menu-item>
-
-      <el-menu-item index="/category" >分类管理</el-menu-item>
 
 
-      <el-menu-item index="/news" >新闻管理</el-menu-item>
-      <el-menu-item index="/im" >在线聊天室</el-menu-item>
-      <el-menu-item index="/message" >留言板</el-menu-item>
+
+
+
+
+      <el-menu-item :index="m.path"  v-for="m in permission">
+
+<!--        <Location style="width: 1em; height: 1em; margin-right: 8px;" />-->
+
+        <el-icon class="IconMenu">
+          <IconMenu/>
+        </el-icon>
+
+        {{ m.comment }}
+
+      </el-menu-item>
+
+
     </el-menu>
   </div>
 </template>
 
 <script>
-import {Location, Document, Menu as IconMenu, Setting,} from '@element-plus/icons';
+import {Document,Location, Menu as IconMenu, Setting,} from '@element-plus/icons';
+
 // import request from "@/utils/request";
 
 
@@ -39,18 +58,21 @@ import {Location, Document, Menu as IconMenu, Setting,} from '@element-plus/icon
 
 export default {
   name: "Aside",
-  components: {Location, Document, IconMenu, Setting},
+  components: { Location,Document, IconMenu, Setting},
   data(){
     return{
       routePath:this.$route.path,
+      permission:{},
 
     }
   },
   props:["user"],
   created() {
     let str =sessionStorage.getItem("user")||"{}"
-    this.form=JSON.parse(str)
+    let permissions =sessionStorage.getItem("permissions")||"{}"
+    this.permission=JSON.parse(permissions)
 
+    // this.html= "<el-icon><arrow-left-bold /></el-icon>"
     // request.get("/api/user/"+this.form.id).then(res=>{
     //   if (res.code ==='0'){
     //     this.form =res.data;

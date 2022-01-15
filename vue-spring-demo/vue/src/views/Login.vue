@@ -62,6 +62,7 @@ import request from "@/utils/request";
 import {ElMessage} from "element-plus";
 import {reactive} from 'vue';
 import ValidCode from "@/components/ValidCode";
+import {activeRouter} from "@/utils/permission";
 
 
 export default {
@@ -144,6 +145,12 @@ export default {
               console.log(res)
               sessionStorage.setItem("user",JSON.stringify(res.data))
               sessionStorage.setItem("token",JSON.stringify(res.data.token))
+              sessionStorage.setItem("permissions",JSON.stringify(res.data.permissions))
+
+              const permission = res.data.permissions;
+              //初始化路由信息
+              activeRouter(permission)
+
               this.$router.push("/");
 
             } else {

@@ -8,6 +8,7 @@ import com.sun.javafx.beans.IDProperty;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @TableName("user")
 @Data
@@ -20,7 +21,7 @@ public class User {
     private Integer age;
     private String sex;
     private String address;
-    private String role;
+
     private String avatar;
 
     @TableField(exist = false)
@@ -29,7 +30,8 @@ public class User {
     @TableField(exist = false)
     private String token;
 
-
+    @TableField(exist = false)
+    private Set<Permission> permissions;
 
 
 }
