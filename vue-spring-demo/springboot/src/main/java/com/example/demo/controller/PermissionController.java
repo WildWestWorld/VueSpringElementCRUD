@@ -42,10 +42,14 @@ public class PermissionController {
         return Result.success(PermissionMapper.selectById(id));
     }
 
+
+    //获取Permission表中所有的路径
     @GetMapping("/all")
     public Result<?> all() {
         return Result.success(PermissionMapper.selectList(null));
     }
+
+
 
     @GetMapping
     public Result<?> findPage(@RequestParam(defaultValue = "1") Integer pageNum,

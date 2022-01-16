@@ -19,15 +19,18 @@
       <el-table-column prop="sex" label="性别" />
       <el-table-column prop="address" label="地址" />
 
-      <el-table-column label="角色" width="300">
-        <template #default="scope" >
-          <span v-if="scope.row.role ==='1'">管理员</span>
-          <span v-if="scope.row.role ==='2'">普通用户</span>
+
+      <el-table-column label="角色列表" width="300">
+        <template #default="scope">
+          <el-select v-model="scope.row.roles" multiple placeholder="请选择" style="width: 80%">
+            <el-option v-for="item in roles" :key="item.id" :label="item.comment" :value="item.id"></el-option>
+          </el-select>
         </template>
       </el-table-column>
 
       <el-table-column  label="操作"  width="400">
         <template #default="scope">
+          <el-button  type="primary" @click="handleChange(scope.row)">保存权限菜单</el-button>
           <el-button   type="success" plain @click="showBooks( scope.row.bookList)">查看书籍列表</el-button>
           <el-button   @click="handleEdit( scope.row)">编辑</el-button>
 
@@ -82,12 +85,9 @@
         <el-radio v-model="form.sex" label="未知">未知</el-radio>
       </el-form-item>
 
-      <el-form-item label="角色" >
 
-        <el-radio v-model="form.role" label="1">管理员</el-radio>
-        <el-radio v-model="form.role" label="2">普通用户</el-radio>
 
-      </el-form-item>
+
 
       <el-form-item label="地址">
         <el-input type="textarea" v-model="form.address" style="width:80%"></el-input>
@@ -126,6 +126,7 @@ export default {
   },
   data(){
     return{
+      roles:{},
       bookList:[],
       form:{},
       searchWord:'',
@@ -145,6 +146,16 @@ export default {
     this.$emit("userInfo")
   },
   methods:{
+    handleChange(row) {
+      request.put("/api/user/changeRole", row).then(res => {
+        if (res.code === '0') {
+          this.$message.success("更新成功")
+          if (res.data) {
+            this.$router.push("/login")
+          }
+        }
+      })
+    },
     showBooks(bookList){
       console.log(JSON.parse(JSON.stringify(bookList)));
       this.bookList=bookList;
@@ -161,6 +172,9 @@ export default {
         console.log(res)
         this.tableData=res.data.records;
         this.total=res.data.total
+      })
+      request.get("/api/role/all").then(res => {
+        this.roles = res.data
       })
     },
     add(){

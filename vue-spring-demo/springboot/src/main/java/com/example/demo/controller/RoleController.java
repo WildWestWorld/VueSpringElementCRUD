@@ -44,9 +44,14 @@ public class RoleController  {
     // 改变权限接口
     @PutMapping("/changePermission")
     public Result<?> changePermission(@RequestBody Role role) {
-        // 先根据角色id删除所有的角色跟权限的绑定关系
+        // 1.先根据角色id删除所有的角色跟权限的绑定关系
+
+        //在role_permission表中 根据role的id 删除对应的permission的id
         permissionMapper.deletePermissionsByRoleId(role.getId());
-        // 再新增 新的绑定关系
+
+        // 2.再新增 新的绑定关系
+       //role.getPermissions()是前端传过来的角色对应的资源路径，然后进行for循环
+        //role.getPermissions()得到的是Permission集合，
         for (Integer permissionId : role.getPermissions()) {
             permissionMapper.insertRoleAndPermission(role.getId(), permissionId);
         }
@@ -62,7 +67,7 @@ public class RoleController  {
     }
 
     @DeleteMapping("/{id}")
-    public Result<?> update(@PathVariable Long id) {
+    public Result<?> delete(@PathVariable Long id) {
         RoleMapper.deleteById(id);
         return Result.success();
     }

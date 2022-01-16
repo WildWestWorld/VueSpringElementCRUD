@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -146,6 +147,33 @@ public class UserController {
         }
 
         Page<User> userPage = userMapper.findPage(new Page<>(pageNum, pageSize), searchWord);
+        // 设置用户的角色id列表
+        for (User record : userPage.getRecords()) {
+            List<UserRole> roles = roleMapper.getRoleIdByUserId(record.getId());
+            List<Integer> roleIds = roles.stream().map(UserRole::getRoleId).distinct().collect(Collectors.toList());
+            record.setRoles(roleIds);
+        }
         return Result.success(userPage);
     }
+
+    // 改变权限接口
+    @PutMapping("/changeRole")
+    public Result<?> changeRole(@RequestBody User user) {
+        // 先根据角色id删除所有的角色跟权限的绑定关系
+        roleMapper.deleteRoleByUserId(user.getId());
+        // 再新增 新的绑定关系
+        for (Integer roleId : user.getRoles()) {
+            roleMapper.insertUserRole(user.getId(), roleId);
+        }
+
+        // 获取当前登录用户的角色id列表
+        User currentUser = TokenUtils.getUser();
+        // 如果当前登录用户的角色列表包含需要修改的角色id，那么就重新登录
+        if (user.getId().equals(currentUser.getId())) {
+            return Result.success(true);
+        }
+//        如果不包含，则返回false，不需要重新登录。
+        return Result.success(false);
+    }
+
 }

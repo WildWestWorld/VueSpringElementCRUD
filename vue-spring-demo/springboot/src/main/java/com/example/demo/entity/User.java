@@ -33,5 +33,8 @@ public class User {
     @TableField(exist = false)
     private Set<Permission> permissions;
 
+    @TableField(exist = false)
+    private List<Integer> roles;
+
 
 }

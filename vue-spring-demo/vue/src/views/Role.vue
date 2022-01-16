@@ -31,13 +31,16 @@
           prop="comment"
           label="备注">
       </el-table-column>
+
       <el-table-column label="权限菜单">
         <template #default="scope">
-          <el-select clearable v-model="scope.row.permissions" multiple placeholder="请选择" style="width: 80%">
+          <el-select  v-model="scope.row.permissions" multiple placeholder="请选择" style="width: 80%">
             <el-option v-for="item in permissions" :key="item.id" :label="item.comment" :value="item.id"></el-option>
           </el-select>
         </template>
       </el-table-column>
+
+
       <el-table-column label="操作">
         <template #default="scope">
           <el-button  type="primary" @click="handleChange(scope.row)">保存权限菜单</el-button>
@@ -134,6 +137,8 @@ export default {
       request.get("/api/permission/all").then(res => {
         this.permissions = res.data
       })
+
+
     },
     add() {
       this.dialogVisible = true
@@ -161,7 +166,7 @@ export default {
       } else {  // 新增
         let userStr = sessionStorage.getItem("user") || "{}"
         let user = JSON.parse(userStr)
-        this.form.author = user.nickName
+
 
         request.post("/api/role", this.form).then(res => {
           console.log(res)
